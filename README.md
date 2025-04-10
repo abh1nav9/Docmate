@@ -199,7 +199,7 @@ We welcome contributions to Docmate! Here's how you can help:
 
 ## 📞 Support
 
-- 📧 Email: rachitpanwar0072@gmail.com
+- 📧 Email: abhinavgautam092@gmail.com
 
 
 ---
@@ -207,5 +207,5 @@ We welcome contributions to Docmate! Here's how you can help:
 <div align="center">
   <sub>Built with ❤️ by the Docmate Team</sub>
   <br>
-  <sub>© 2024 Docmate. All rights reserved.</sub>
+  <sub>© 2023 Docmate. All rights reserved.</sub>
 </div>
