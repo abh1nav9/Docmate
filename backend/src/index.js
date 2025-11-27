@@ -9,6 +9,7 @@ import { MONGODB_URI, ORIGIN, ORIGIN2, PORT } from "./constants.js";
 import authRoutes from "./routes/authRoutes.js"
 import patientRoutes from "./routes/patientRoutes.js"
 import doctorRoutes from "./routes/doctorRoutes.js"
+import { DataBootstrapper } from "./bootstrap/DataBootstrapper.js";
 
 const mongooseOptions = {
     maxPoolSize: 10,
@@ -16,9 +17,15 @@ const mongooseOptions = {
     socketTimeoutMS: 45000,
     family: 4
 };
+const dataBootstrapper = new DataBootstrapper();
 mongoose.connect(MONGODB_URI, mongooseOptions).then(
-    () => {
+    async () => {
         console.log("Connected to MongoDB");
+        try {
+            await dataBootstrapper.ensureSeedData();
+        } catch (seedError) {
+            console.log("Error during bootstrap seeding: ", seedError);
+        }
     },
     (err) => {
         console.log("Error connecting to MongoDB: ", err);

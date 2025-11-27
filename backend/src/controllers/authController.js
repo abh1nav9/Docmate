@@ -16,22 +16,31 @@ export const getPincodes = async (req, res) => {
 
 export const getHospitals = async (req, res) => {
     const { pincode } = req.query;
-    if (pincode) {
-        const hospitals = await Hospital.find({ pincode }).select("hospitalName").exec();
-        return res.send(hospitals);
-    }
-    return res.send([]);
+    const sanitizedPincode = pincode && pincode !== "undefined" ? pincode : null;
+    const filters = sanitizedPincode ? { pincode: sanitizedPincode } : {};
+
+    const hospitals = await Hospital.find(filters)
+        .select("hospitalName pincode")
+        .exec();
+    return res.send(hospitals);
 }
 
 export const getDoctors = async (req, res) => {
     try{
         let { hospitalId } = req.query;
-        if (hospitalId) {
-            hospitalId = new mongoose.Types.ObjectId(hospitalId);
-            const doctors = await Doctor.find({ hospital: hospitalId }).select("name").exec();
+        const sanitizedHospitalId = hospitalId && hospitalId !== "undefined" ? hospitalId : null;
+
+        if (sanitizedHospitalId) {
+            const hospitalObjectId = new mongoose.Types.ObjectId(sanitizedHospitalId);
+            const doctors = await Doctor.find({ hospital: hospitalObjectId }).select("name hospital").exec();
             return res.send(doctors);
         }
-        return res.send([]);
+
+        const doctors = await Doctor.find({})
+            .select("name hospital")
+            .populate("hospital", "hospitalName pincode")
+            .exec();
+        return res.send(doctors);
     } catch (e) {
         console.log(e.message)
         return res.send([]);
